@@ -43,9 +43,9 @@ public class WebhookService {
 
     private WebhookResponse generateWebhook() throws Exception {
         WebhookRequest request = new WebhookRequest();
-        request.setName("John Doe");
-        request.setRegNo("REG12347");
-        request.setEmail("john@example.com");
+        request.setName("shailesh");
+        request.setRegNo("22BCE0406");
+        request.setEmail("loolaneshailesh@gmail.com");
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
