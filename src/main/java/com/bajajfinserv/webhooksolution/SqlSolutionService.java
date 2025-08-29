@@ -28,22 +28,41 @@ public class SqlSolutionService {
     }
 
     private String solveQuestion1() {
-        // TODO: Replace this with actual SQL solution for Question 1
-        // Access the Google Drive link: https://drive.google.com/file/d/1IeSI6l6KoSQAFfRihIT9tEDICtoz-G/view?usp=sharing
-        
-        String sql = "SELECT * FROM employees WHERE department = 'IT' ORDER BY salary DESC";
-        
-        logger.info("Question 1 SQL Solution: {}", sql);
+        String sql = """
+            SELECT 
+                p.amount AS SALARY,
+                CONCAT(e.first_name, ' ', e.last_name) AS NAME,
+                FLOOR(DATEDIFF(CURRENT_DATE, e.dob) / 365) AS AGE,
+                d.department_name AS DEPARTMENT_NAME
+            FROM payments p
+            JOIN employee e ON p.emp_id = e.emp_id
+            JOIN department d ON e.department = d.department_id
+            WHERE DAY(p.payment_time) != 1
+              AND p.amount = (
+                SELECT MAX(amount)
+                FROM payments
+                WHERE DAY(payment_time) != 1
+            )
+        """;
         return sql;
     }
-
+    
     private String solveQuestion2() {
-        // TODO: Replace this with actual SQL solution for Question 2
-        // Access the Google Drive link: https://drive.google.com/file/d/143MR5cLFrlNEuHzzWJ5RHnEWuijuM9X/view?usp=sharing
-        
-        String sql = "SELECT customer_id, COUNT(*) as order_count FROM orders GROUP BY customer_id HAVING COUNT(*) > 5";
-        
-        logger.info("Question 2 SQL Solution: {}", sql);
+        String sql = """
+            SELECT 
+                e.emp_id AS EMP_ID,
+                e.first_name AS FIRST_NAME,
+                e.last_name AS LAST_NAME,
+                d.department_name AS DEPARTMENT_NAME,
+                COUNT(y.emp_id) AS YOUNGER_EMPLOYEES_COUNT
+            FROM employee e
+            JOIN department d ON e.department = d.department_id
+            LEFT JOIN employee y ON y.department = e.department AND y.dob > e.dob
+            GROUP BY e.emp_id, e.first_name, e.last_name, d.department_name
+            ORDER BY e.emp_id DESC
+        """;
         return sql;
+    }
+    
     }
 }
